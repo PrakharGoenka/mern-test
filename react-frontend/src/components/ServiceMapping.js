@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, ButtonGroup, Button } from 'react-bootstrap'
 import ParamList from './ParamList'
-import ParameterMappings from './ParameterMappings'
-import ComponentSelector from './ComponentSelector'
+import MappingSelection from './MappingSelection'
+import MappingAttributes from './MappingAttributes'
 
 /* 
 Note: This page should mainly contain only two buttons 1. Submit 2. Cancel. All the data that gets updated,
@@ -32,79 +32,131 @@ Rightmost: Renders the MappingsAttribute component.
 
 class ServiceMapping extends Component {
     state = {
-        parameter: null,
-        mapping_index: null,
-        microservice: this.props.Microservice,
+        parameter: null, //selected parameter
+        mapping: {      //selected type and subtype of mapping
+            'type': null,
+            'subType': null
+        },
+        //TODO: a COPY of props.Microservice to distinguish between existing and modified service mapping (TODO)
+        microservice: {...this.props.microservice},
+        allMappings: {...this.props.allMappings}
     }
 
     componentDidMount() {
-        
+        // TODO: Implement Axios calls to get: the selected microservice's mapping object (template sake, if mapping doesn't exist),
+        // types of mappings available,
+        // Currently receiving this data as props from App
     }
 
+    /* a method to be passed as callback via props to ParamList.
+       It handles selection of Parameter by updating the same in ServiceMapping's state
+       and sets the mapping attribute of state, to null.  */    
     selectParam = param => {
-        this.setState({
+        this.setState(state => ({
             parameter: param,
-            mapping_index: null
-        })
-    }
-
-    selectMapping = index => {
-        this.setState({
-            mapping_index: index
-        })
-    }
-
-    updateAttributes = (update) => {
-        if(update.type === "Translation") {
-            this.setState((state) => {
-                var {name, index} = update.parameter
-                state['microservice']['Mappings'][name][index]['Attributes']['Translation'] = update.newValue
-                return state
+            mapping: {
+                type: state.microservice.mappings[param].type,
+                subType: state.microservice.mappings[param].subType
+            }
             })
-        }
+        )
     }
 
+    /* a method to be passed as callback via props to MappingSelection.
+       It handles selection of mapping type and subtype by updating the same in ServiceMapping's state */
+    selectMapping = (type, subType) => {
+        this.setState(state => {            
+            var microservice  = {...state.microservice}
+            microservice.mappings[state.parameter].type = type
+            microservice.mappings[state.parameter].subType = subType
+            return {
+                mapping: {
+                    'type': type,
+                    'subType': subType
+                },
+                microservice: microservice                
+            }
+        })
+    }
+
+    handleCode = value => {
+        this.setState(state => {            
+            var microservice  = {...state.microservice}
+            microservice.mappings[state.parameter].attributes.code = value
+            return {
+                microservice: microservice                
+            }
+        })
+    }
+
+    handleArguments = value => {
+        this.setState(state => {            
+            var microservice  = {...state.microservice}
+            microservice.mappings[state.parameter].attributes.arguments[0] = value
+            return {
+                microservice: microservice                
+            }
+        })
+    }
+
+    /* TODO: Method to handle actions of the submit and the cancel button.
+    submit:  Perform necessary validations(if required) and post updated mapping object to backend, then notify user about its status.
+    cancel: Set the current copy of mapping object equal to the existing value and notify the user about the same. */
     handleSubmit = (event) => {
         event.preventDefault()
         if(event.target.name === 'submit') {
             console.log('Mapping has been updated.')
             console.log(this.state.microservice)
-        } else {
+        } else if(event.target.name === 'cancel'){
             console.log('Process cancelled.')
             // Route to homepage etc.
         }
     }
 
+    /*render method of react. */
     render() {
-        var { microservice, parameter, mapping_index } = this.state
-        var mapping = null
-        if(mapping_index !== null) {
-            mapping = microservice.Mappings[parameter][mapping_index]
-        }
+        var { microservice, parameter, mapping, allMappings } = this.state
+
         return (
+            /* A component comprising of 2 rows of 3 columns each */
             <Container>
+                {/* 'microservice !== null' means the props has a microservices mapping object, hence parameter list can be rendered
+                'parameter !== null' means there is a valid selection of parameter and hence, the associated mapping can be displayed
+                'mapping.subType !== null' also means 'mapping.type !== null', i.e. a mapping type and subtype have been selected
+                for the selected parameter.*/}
+                {/* Each column in the second row renders a component. */}
                 <Row>
-                    <Col>{microservice !== null  && (<h3> Parameters</h3>)} </Col>
-                    <Col>{parameter !== null  && (<h3> Mappings Associated</h3>)} </Col>
-                    <Col>{mapping_index !== null  && (<h3> Attributes</h3>)} </Col>
+                    <Col md='auto'> 
+                        {microservice && (<h4> Parameters</h4>)}
+                        {(microservice) && (<ParamList paramList = {microservice.parameters} onClick = {this.selectParam}/>)}
+                    </Col>
+                    <Col md='auto'> 
+                        {parameter && (<h4> Associated Mapping</h4>)}
+                        {(parameter) &&  (<MappingSelection allMappings = {allMappings} associatedMapping = {microservice.mappings[parameter]}
+                        handleChange = {this.selectMapping }/>) }
+                    </Col>
+                    <Col>                        
+                        {mapping.subType && (<h4> Attributes</h4>)} 
+                        {
+                            (mapping.subType) && (
+                                <MappingAttributes
+                                    microserviceMapping = {microservice.mappings[parameter]} 
+                                    microserviceB = {this.props.microserviceB} 
+                                    handleCode = {this.handleCode}
+                                    handleArguments = {this.handleArguments}
+                                />
+                            )
+                        }
+                        
+                    </Col>
                 </Row>
-                <Row>
-                    <Col> 
-                        <ParamList paramList = {microservice.Parameters} onClick = {this.selectParam}/>
-                    </Col>
-                    <Col> 
-                        {(parameter) &&  <ParameterMappings parameterMappings = {microservice.Mappings[parameter]}
-                        onClick = {this.selectMapping }/> }
-                    </Col>
-                    <Col>
-                        {(mapping) && <ComponentSelector mapping = {mapping} updateAttributes = {this.updateAttributes}/>}
-                    </Col>
-                </Row>
-                <Row>
-                    <Col> </Col>
-                    <Col> </Col>
-                    <Col> <button type='submit' name='submit' onClick={this.handleSubmit}> Submit </button>
-                          <button type='submit' name='cancel' onClick={this.handleSubmit}> Cancel </button>
+                {/* Third row renders two buttons, for submitting/ cancelling the changes. */}
+                <Row>                
+                    <Col md={{offset: 8 }}>
+                        <ButtonGroup>
+                            <Button variant='outline-primary' size='md' name='submit' onClick={this.handleSubmit}> Submit </Button>
+                            <Button variant='outline-secondary' size='md' name='cancel' onClick={this.handleSubmit}> Cancel </Button>
+                        </ButtonGroup>                        
                     </Col>
                 </Row>
             </Container>

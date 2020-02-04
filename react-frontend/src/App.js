@@ -7,23 +7,42 @@ class App extends Component {
   }
 
   render() {
-    var  MicroserviceSelected = {
-      'Parameters': ['A', 'B', 'C', 'D', 'E'],
-      'Mappings': {
-        'A': [{'Param': 'A', 'Type': 'One to one', 'Attributes': {'Translation': ''}}],
-        'B': [{'Param': 'B', 'Type': 'Coversion', 'Attributes': {'Translation': ''}}],
-        'C': [{'Param': 'C', 'Type': 'Translation', 'Attributes': {'Translation': ''}}],
-        'D': [{'Param': 'D', 'Type': 'Translation', 'Attributes': {'Translation': ''}}],
-        'E': [{'Param': 'E', 'Type': 'Translation', 'Attributes': {'Translation': ''}}]
+    var  microserviceMapping = {
+      'parameters': ['A', 'B', 'C', 'D', 'E'],
+      'mappings': {
+        'A': {'param': 'A', 'type': 'one-to-one', 'subType': 'type A', 'attributes': {'arguments': ['B'], 'code': 'Hey there Im working'}},
+        'B': {'param': 'B', 'type': 'one-to-one', 'subType': 'type B', 'attributes': {'arguments': [], 'code': ''}},
+        'C': {'param': 'C', 'type': 'one-to-many', 'subType': 'type C', 'attributes': {'arguments': [], 'code': ''}},
+        'D': {'param': 'D', 'type': 'one-to-many', 'subType': 'type D', 'attributes': {'arguments': [], 'code': ''}},
+        'E': {'param': 'E', 'type': null, 'subType': null, 'attributes': {'arguments': [], 'code': ''}}
       }
     }
-      return (
-        <div>
-          <ServiceMapping Microservice = {MicroserviceSelected}/>
-        </div>
-      );
-  }
-    
+
+    var allMappings = {
+      'types': ['one-to-one', 'one-to-many', 'batching', 'splitting', 'none'],
+      'subTypes': {
+        'one-to-one': ['type A', 'type B', 'type C', 'type D'],
+        'one-to-many': ['type E', 'type C', 'type D', 'type A'],
+        'batching': ['type F', 'type D', 'type A', 'type B'],
+        'splitting': ['type G', 'type A', 'type B', 'type C'],
+        'none': ['none']
+      }
+    }
+
+    var microserviceB = {
+      'parameters' : ['B1', 'B2', 'B3', 'B4', 'none'],
+      'parameterAttributes' : {
+        'B1': {'name': 'B1', 'type': 'int'},
+        'B2': {'name': 'B2', 'type': 'string'},
+        'B3': {'name': 'B3', 'type': 'float'},
+        'B4': {'name': 'B4', 'type': 'int'},
+      }
+    }
+
+    return (
+        <ServiceMapping microservice = {microserviceMapping} allMappings = {allMappings} microserviceB = {microserviceB}/>
+    )
+  }    
 }
 
 export default App;
