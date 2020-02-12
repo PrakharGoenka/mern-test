@@ -20,7 +20,7 @@ class Multiselect extends Component {
 
     render() {
         if(this.props.args.length === 0) {
-            return("Please add arguments to be passed to the function!!")
+            return("No arguments have been selected")
         } else {
             var { parameters, args } = this.props
 

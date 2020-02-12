@@ -10,11 +10,11 @@ class App extends Component {
     var  microserviceMapping = {
       'parameters': ['A', 'B', 'C', 'D', 'E'],
       'mappings': {
-        'A': {'param': 'A', 'type': 'one-to-one', 'subType': 'type A', 'attributes': {'arguments': ['B2', 'B1', 'B3'], 'code': 'Hey there Im working'}},
-        'B': {'param': 'B', 'type': 'one-to-one', 'subType': 'type B', 'attributes': {'arguments': [], 'code': ''}},
-        'C': {'param': 'C', 'type': 'one-to-many', 'subType': 'type C', 'attributes': {'arguments': [], 'code': ''}},
-        'D': {'param': 'D', 'type': 'one-to-many', 'subType': 'type D', 'attributes': {'arguments': [], 'code': ''}},
-        'E': {'param': 'E', 'type': null, 'subType': null, 'attributes': {'arguments': [], 'code': ''}}
+        'A': {'param': 'A', 'type': 'one-to-one', 'subType': 'type A', 'function': {'name': 'test','arguments': ['B2', 'B1', 'B3'], 'code': 'Hey there Im working'}},
+        'B': {'param': 'B', 'type': 'one-to-one', 'subType': 'type B', 'function': {'name': null,'arguments': [], 'code': ''}},
+        'C': {'param': 'C', 'type': 'one-to-many', 'subType': 'type C', 'function': {'name': null,'arguments': [], 'code': ''}},
+        'D': {'param': 'D', 'type': 'one-to-many', 'subType': 'type D', 'function': {'name': null,'arguments': [], 'code': ''}},
+        'E': {'param': 'E', 'type': null, 'subType': null, 'function': {'name': null,'arguments': [], 'code': ''}}
       }
     }
 

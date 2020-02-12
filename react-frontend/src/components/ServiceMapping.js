@@ -79,10 +79,10 @@ class ServiceMapping extends Component {
         })
     }
 
-    handleCode = value => {
+    handleName = value => {
         this.setState(state => {            
             var microservice  = {...state.microservice}
-            microservice.mappings[state.parameter].attributes.code = value
+            microservice.mappings[state.parameter].function.name = value
             return {
                 microservice: microservice                
             }
@@ -92,7 +92,17 @@ class ServiceMapping extends Component {
     handleArguments = value => {
         this.setState(state => {            
             var microservice  = {...state.microservice}
-            microservice.mappings[state.parameter].attributes.arguments = value
+            microservice.mappings[state.parameter].function.arguments = value
+            return {
+                microservice: microservice                
+            }
+        })
+    }
+
+    handleCode = value => {
+        this.setState(state => {            
+            var microservice  = {...state.microservice}
+            microservice.mappings[state.parameter].function.code = value
             return {
                 microservice: microservice                
             }
@@ -135,9 +145,10 @@ class ServiceMapping extends Component {
                             (mapping.subType) && (
                                 <MappingAttributes
                                     microserviceMapping = {microservice.mappings[parameter]} 
-                                    microserviceB = {this.props.microserviceB} 
-                                    handleCode = {this.handleCode}
+                                    microserviceB = {this.props.microserviceB}
+                                    handleName = {this.handleName}
                                     handleArguments = {this.handleArguments}
+                                    handleCode = {this.handleCode}
                                 />
                             )
                         }

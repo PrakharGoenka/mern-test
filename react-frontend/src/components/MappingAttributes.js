@@ -15,14 +15,10 @@ class MappingAttributes extends Component {
 
     }
 
-    handleCode = value => {
-        this.props.handleCode(value)
-    }
-
     handleClick = event => {
         event.preventDefault()
         var name = event.target.name
-        var args = this.props.microserviceMapping.attributes.arguments
+        var args = this.props.microserviceMapping.function.arguments
 
         if(name === 'add') {
             args.push(null)
@@ -40,9 +36,25 @@ class MappingAttributes extends Component {
 
         return (
                 <Container>
+                    {/* TODO implement name-args-implementation model */}
+                    <Row>
+                        <Form.Group controlId='functionName'>
+                            <Form.Label> Mapping Function's Name </Form.Label>
+                            <Form.Control 
+                                type='text'
+                                value = {this.props.microserviceMapping.function.name || ''}
+                                onChange = {
+                                    event => {
+                                        event.preventDefault()
+                                        this.props.handleName(event.target.value)
+                                    }
+                                }
+                            ></Form.Control>
+                        </Form.Group>
+                    </Row>
                     <Row>
                         < Multiselect
-                            args = {this.props.microserviceMapping.attributes.arguments}
+                            args = {this.props.microserviceMapping.function.arguments}
                             parameters = {this.props.microserviceB.parameters}
                             handleArguments = {this.props.handleArguments}
                         />
@@ -57,15 +69,15 @@ class MappingAttributes extends Component {
                     <br/>
                     <Row>
                         <Form.Group controlId='code'>
-                            <Form.Label> Mapping Function </Form.Label>
+                            <Form.Label> Function implementation </Form.Label>
                             <MonacoEditor
                                 height="400"
                                 width="600"
                                 language="javascript"
                                 theme="vs-dark"
                                 defaultValue=""
-                                value={this.props.microserviceMapping.attributes.code}
-                                onChange={this.handleCode}
+                                value={this.props.microserviceMapping.function.code}
+                                onChange={this.props.handleCode}
                                 options={options}
                             />
                         </Form.Group>
