@@ -92,7 +92,7 @@ class ServiceMapping extends Component {
     handleArguments = value => {
         this.setState(state => {            
             var microservice  = {...state.microservice}
-            microservice.mappings[state.parameter].attributes.arguments[0] = value
+            microservice.mappings[state.parameter].attributes.arguments = value
             return {
                 microservice: microservice                
             }
@@ -112,31 +112,25 @@ class ServiceMapping extends Component {
             // Route to homepage etc.
         }
     }
-
+    // TODO standardize the null-none correspondences in select menus
     /*render method of react. */
     render() {
         var { microservice, parameter, mapping, allMappings } = this.state
 
         return (
-            /* A component comprising of 2 rows of 3 columns each */
             <Container>
-                {/* 'microservice !== null' means the props has a microservices mapping object, hence parameter list can be rendered
-                'parameter !== null' means there is a valid selection of parameter and hence, the associated mapping can be displayed
-                'mapping.subType !== null' also means 'mapping.type !== null', i.e. a mapping type and subtype have been selected
-                for the selected parameter.*/}
-                {/* Each column in the second row renders a component. */}
                 <Row>
                     <Col md='auto'> 
-                        {microservice && (<h4> Parameters</h4>)}
+                        {microservice && (<h4> Parameters <hr/></h4>)}                        
                         {(microservice) && (<ParamList paramList = {microservice.parameters} onClick = {this.selectParam}/>)}
                     </Col>
                     <Col md='auto'> 
-                        {parameter && (<h4> Associated Mapping</h4>)}
+                        {parameter && (<h4> Associated Mapping <hr/></h4>)}                        
                         {(parameter) &&  (<MappingSelection allMappings = {allMappings} associatedMapping = {microservice.mappings[parameter]}
                         handleChange = {this.selectMapping }/>) }
                     </Col>
                     <Col>                        
-                        {mapping.subType && (<h4> Attributes</h4>)} 
+                        {mapping.subType && (<h4> Attributes <hr/></h4>)}                        
                         {
                             (mapping.subType) && (
                                 <MappingAttributes
@@ -150,7 +144,6 @@ class ServiceMapping extends Component {
                         
                     </Col>
                 </Row>
-                {/* Third row renders two buttons, for submitting/ cancelling the changes. */}
                 <Row>                
                     <Col md={{offset: 8 }}>
                         <ButtonGroup>

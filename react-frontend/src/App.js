@@ -10,7 +10,7 @@ class App extends Component {
     var  microserviceMapping = {
       'parameters': ['A', 'B', 'C', 'D', 'E'],
       'mappings': {
-        'A': {'param': 'A', 'type': 'one-to-one', 'subType': 'type A', 'attributes': {'arguments': ['B'], 'code': 'Hey there Im working'}},
+        'A': {'param': 'A', 'type': 'one-to-one', 'subType': 'type A', 'attributes': {'arguments': ['B2', 'B1', 'B3'], 'code': 'Hey there Im working'}},
         'B': {'param': 'B', 'type': 'one-to-one', 'subType': 'type B', 'attributes': {'arguments': [], 'code': ''}},
         'C': {'param': 'C', 'type': 'one-to-many', 'subType': 'type C', 'attributes': {'arguments': [], 'code': ''}},
         'D': {'param': 'D', 'type': 'one-to-many', 'subType': 'type D', 'attributes': {'arguments': [], 'code': ''}},
